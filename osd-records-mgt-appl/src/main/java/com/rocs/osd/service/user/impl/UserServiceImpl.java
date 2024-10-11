@@ -166,16 +166,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             User user = userRepository.findUserByUsername(username);
             String otp = generateOTP();
             user.setOtp(otp);
-            String userNumber = user.getUserId();
-            Student studentNumber = studentRepository.findByStudentNumber(userNumber);
-            Employee employeeNumber = employeeRepository.findByEmployeeNumber(userNumber);
-            External externalNumber = externalRepository.findByExternalNumber(userNumber);
-            if(studentNumber != null){
-                emailService.sendNewPasswordEmail(studentNumber.getEmail(),otp);
-            } else if(employeeNumber != null){
-                emailService.sendNewPasswordEmail(employeeNumber.getEmail(),otp);
-            } else if(externalNumber != null){
-                emailService.sendNewPasswordEmail(externalNumber.getEmail(),otp);
+            long userId = newUser.getId();
+            Student studentAccount = studentRepository.findByUser_Id(userId);
+            Employee employeeAccount = employeeRepository.findByUser_Id(userId);
+            External externalAccount = externalRepository.findByUser_Id(userId);
+            if(studentAccount != null){
+                emailService.sendNewPasswordEmail(studentAccount.getEmail(),otp);
+            } else if(employeeAccount != null){
+                emailService.sendNewPasswordEmail(employeeAccount.getEmail(),otp);
+            } else if(externalAccount != null){
+                emailService.sendNewPasswordEmail(externalAccount.getEmail(),otp);
             }
             userRepository.save(user);
             LOGGER.info("Username Found!");
